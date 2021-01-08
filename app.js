@@ -13,6 +13,7 @@ function requestUserRepos(){
                 <p><strong> ${data[i].name}</strong></p>
                 <p>${data[i].description}</p>
                 <p> <a href="${data[i].html_url}">${data[i].html_url}</a></p>
+                <p>${data[i].language}</p>
             `);
             ul.appendChild(li);
 

@@ -32,12 +32,13 @@ h2 {
 button{
   position: absolute;
   border: none;
-  padding: 40px;
-  background-color: #b5b5b5;
-  
+  padding: 50px;
+  background-color: white;
+
 }
 
-.button{
+button:hover{
+  background-color: #d6d6d6;
 }
 
 #links a{
