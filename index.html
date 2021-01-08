@@ -1,38 +1,33 @@
-<html>
-<title>
+<html lang="en" dir="ltr">
+  <title>
   Jonathan Hall
-</title>
-<body>
-<link rel="stylesheet" href="style.css">
-<h1>Jonathan Hall</h1>
+  </title>
+  <body>
+    <link rel="stylesheet" href="style.css">
+    <h1>Jonathan Hall</h1>
 
-<div id="links">
-<a href="https://github.com/jonomh2" id="github">Github</a>
-<a href="https://www.linkedin.com/in/jonathan-hall-2878b7151/" id="linkedin">LinkedIn</a>
-<a href="portfolio.html" id="portfolio">Personal Projects</a>
-</div>
+    <div id="links">
+      <a href="https://github.com/jonomh2" id="github">Github</a>
+      <a href="https://www.linkedin.com/in/jonathan-hall-2878b7151/" id="linkedin">LinkedIn</a>
+      <a href="portfolio.html" id="portfolio">Personal Projects</a>
+    </div>
 
-
-<script>
-  document.getElementById("github").addEventListener("mouseover", mouseOverGithub);
-  document.getElementById("github").addEventListener("mouseout", mouseOut);
-  document.getElementById("linkedin").addEventListener("mouseover", mouseOverLink);
-  document.getElementById("linkedin").addEventListener("mouseout", mouseOut);
-
-  var body = document.getElementsByTagName('body')[0];
-
-  function mouseOverGithub() {
-      body.style.backgroundImage = 'url(2.PNG)';
-    }
-  function mouseOverLink() {
+  <script>
+    document.getElementById("github").addEventListener("mouseover", mouseOverGithub);
+    document.getElementById("github").addEventListener("mouseout", mouseOut);
+    document.getElementById("linkedin").addEventListener("mouseover", mouseOverLink);
+    document.getElementById("linkedin").addEventListener("mouseout", mouseOut);
+    var body = document.getElementsByTagName('body')[0];
+    function mouseOverGithub() {
+        body.style.backgroundImage = 'url(2.PNG)';
+      }
+    function mouseOverLink() {
         body.style.backgroundImage = 'url(1.PNG)';
       }
+    function mouseOut() {
+      document.body.style.backgroundImage = "none";
+    }
+  </script>
 
-
-  function mouseOut() {
-    document.body.style.backgroundImage = "none";
-  }
-
-</script>
-</body>
+  </body>
 </html>

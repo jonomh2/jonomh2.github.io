@@ -15,6 +15,31 @@ h1 {
   margin-right:auto;
 }
 
+h2 {
+  padding:10px;
+  text-align: center;
+  color: white;
+  margin-top: 4%;
+  font-family: rockwell;
+  font-size: 80px;
+  background: black;
+  display: table;
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom: 5%;
+}
+
+button{
+  position: absolute;
+  border: none;
+  padding: 40px;
+  background-color: #b5b5b5;
+  
+}
+
+.button{
+}
+
 #links a{
   font-size: 20px;
   font-family: serif;
@@ -31,4 +56,31 @@ h1 {
 }
 
 table.center {
+}
+
+#userRepos {
+  text-align: center;
+  margin: auto;
+}
+
+#userRepos li{
+  padding-bottom: 10%;
+}
+
+li {
+  text-decoration: none;
+}
+
+p{
+  font-size: 20px;
+}
+
+strong {
+  font-size: 30px;
+}
+
+#back{
+  padding: 5%;
+  margin-top: 10%;
+  font-size: 20pt;
 }
