@@ -3,10 +3,11 @@ body {
 }
 
 h1 {
+  padding:10px;
   text-align: center;
   color: white;
   margin-top: 15%;
-  font-family: sans-serif;
+  font-family: rockwell;
   font-size: 100px;
   background: black;
   display: table;
