@@ -1,0 +1,60 @@
+<html>
+<head>
+    <title>Braillr.</title>
+    
+    <script src="brlr/braillr.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+
+    <link rel="stylesheet" href="brlr/style.css">
+
+    <header>
+        <h1>Braillr.</h1>
+        
+
+        <svg height="150" width="150" id="braille">
+            <circle cx="15" cy="15" r="15" fill="lightgrey" id="1"/>
+            <circle cx="75" cy="15" r="15" fill="lightgrey"  id="4"/>
+            <circle cx="15" cy="75" r="15" fill="lightgrey" id="2" />
+            <circle cx="75" cy="75" r="15" fill="lightgrey" id="5" />
+            <circle cx="15" cy="135" r="15" fill="lightgrey" id="3" />
+            <circle cx="75" cy="135" r="15" fill="lightgrey" id="6" />
+          </svg> 
+    </header>
+</head>
+
+<body>
+      <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">About Braillr.</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Braillr is a tool for sighted braille learners to practice typing in Grade 1 braille. It's still in progress; a lot still has to be added.<br><br>
+          F: 1<br>
+          D: 2<br>
+          S: 3<br>
+          J: 4<br>
+          K: 5<br>
+          L: 6
+        </div>
+      </div>
+    </div>
+  </div>    
+
+    <a id="text" style="font-size:8vw;"></a>
+</body>
+
+
+<button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter" id="quest">
+    ?
+  </button>
+</html>
