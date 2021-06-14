@@ -7,6 +7,10 @@ var strOfCombos = [];
 var largestCombo = 0;
 var largestComboIndex = 0;
 var backspaceTemp = "";
+var letter = "";
+var nextUpper = false;
+var upperLock = false;
+var numLock = false;
 var acceptedInput = [70, 68, 83, 74, 75, 76, 32]//change this to be the accepted input and delete the ! on line (this line + 3)
 
 window.addEventListener('keydown', (event) => {
@@ -66,7 +70,82 @@ window.addEventListener('keyup', (event) => {
                     largestComboIndex = i;
                 }
             }
-            toLetter(String(output[largestComboIndex]).split(","))
+            letter = toLetter(String(output[largestComboIndex]).split(","));
+            console.log(letter)
+            if(letter){
+                
+                if(letter == "up"){
+                    if(nextUpper){
+                        if(upperLock){
+                            upperLock = false;
+                        }
+                        else{
+                            upperLock = true;
+                            nextUpper = false;
+                        }
+                    }
+                    else{
+                        nextUpper = true;
+                    }
+                }
+                if(letter == "num"){
+                    numLock = true;
+                }
+                if(!numLock){
+                    if(nextUpper || upperLock){
+                        document.getElementById('text').innerHTML += letter.toUpperCase();
+                        nextUpper = false;
+                    }
+                    else{
+                        document.getElementById('text').innerHTML += letter;
+                    }
+                }
+                else{
+                    if(letter == "a"){
+                        document.getElementById('text').innerHTML += "1";
+                        numLock = false;
+                    }
+                    else if(letter == "b"){
+                        document.getElementById('text').innerHTML += "2";
+                        numLock = false;
+                    }
+                    else if(letter == "c"){
+                        document.getElementById('text').innerHTML += "3";
+                        numLock = false;
+                    }
+                    else if(letter == "d"){
+                        document.getElementById('text').innerHTML += "4";
+                        numLock = false;
+                    }
+                    else if(letter == "e"){
+                        document.getElementById('text').innerHTML += "5";
+                        numLock = false;
+                    }
+                    else if(letter == "f"){
+                        document.getElementById('text').innerHTML += "6";
+                        numLock = false;
+                    }
+                    else if(letter == "g"){
+                        document.getElementById('text').innerHTML += "7";
+                        numLock = false;
+                    }
+                    else if(letter == "h"){
+                        document.getElementById('text').innerHTML += "8";
+                        numLock = false;
+                    }
+                    else if(letter == "i"){
+                        document.getElementById('text').innerHTML += "9";
+                        numLock = false;
+                    }
+                    else if(letter == "j"){
+                        document.getElementById('text').innerHTML += "0";
+                        numLock = false;
+                    }
+                    else if(letter != "num"){
+                        document.getElementById('text').innerHTML += letter;
+                    }
+                }
+            }
             strOfCombos = [];
             output=[];
         }
@@ -103,36 +182,39 @@ window.addEventListener('keyup', (event) => {
 function toLetter(arrayOfKeys){
     if(arrayOfKeys.length == 1){//length of 1 evaluation
         if(arrayOfKeys[0]=="70"){
-            document.getElementById('text').innerHTML += 'a';
+            return 'a';
         }
         else if(arrayOfKeys[0]=="32"){
-            document.getElementById('text').innerHTML += ' ';
+            return ' ';
         }
         else if(arrayOfKeys[0]=="68"){
-            document.getElementById('text').innerHTML += ',';
+            return ',';
+        }
+        else if(arrayOfKeys[0]=="76"){
+            return 'up';
         }
     }
     else if(arrayOfKeys.length==2){
         if(arrayOfKeys.includes("68")){
             if(arrayOfKeys.includes("70")){
-                document.getElementById('text').innerHTML += 'b';
+                return 'b';
             }
             else if(arrayOfKeys.includes("74")){
-                document.getElementById('text').innerHTML += 'i';
+                return 'i';
             }
             else if(arrayOfKeys.includes("75")){
-                document.getElementById('text').innerHTML += ':';
+                return ':';
             }
         }
-        else{
-            if(arrayOfKeys.includes("83")){
-                document.getElementById('text').innerHTML += 'k';
-            }
-            else if(arrayOfKeys.includes("74")){
-                document.getElementById('text').innerHTML += 'c';
+        else if(arrayOfKeys.includes("70")){
+            if(arrayOfKeys.includes("74")){
+                return 'c';
             }
             else if(arrayOfKeys.includes("75")){
-                document.getElementById('text').innerHTML += 'e';
+                return 'e';
+            }
+            else if(arrayOfKeys.includes("83")){
+                return 'k';
             }
         }
     }
@@ -140,88 +222,91 @@ function toLetter(arrayOfKeys){
         if(arrayOfKeys.includes("83")){
             if(arrayOfKeys.includes("74")){
                 if(arrayOfKeys.includes("70")){
-                    document.getElementById('text').innerHTML += 'm';
+                    return 'm';
                 }
                 else if(arrayOfKeys.includes("68")){
-                    document.getElementById('text').innerHTML += 's';
+                    return 's';
                 }
             }
             else if(arrayOfKeys.includes("70")){
                 if(arrayOfKeys.includes("68")){
-                    document.getElementById('text').innerHTML += 'l';
+                    return 'l';
                 }
                 else if(arrayOfKeys.includes("75")){
-                    document.getElementById('text').innerHTML += 'o';
+                    return 'o';
                 }
                 else if(arrayOfKeys.includes("76")){
-                    document.getElementById('text').innerHTML += 'u';
+                    return 'u';
                 }
             }
         }
         else if(arrayOfKeys.includes("70")){
             if(arrayOfKeys.includes("68")){
                 if(arrayOfKeys.includes("74")){
-                    document.getElementById('text').innerHTML += 'f';
+                    return 'f';
                 }
                 else if(arrayOfKeys.includes("75")){                    
-                    document.getElementById('text').innerHTML += 'h';
+                    return 'h';
                 }
             }
             else if(arrayOfKeys.includes("74") && arrayOfKeys.includes("75")){
-                document.getElementById('text').innerHTML += 'd';
+                return 'd';
             }
         }
         else if(arrayOfKeys.includes("76") && arrayOfKeys.includes("75") &&  arrayOfKeys.includes("68")){
-            document.getElementById('text').innerHTML += '.';
+            return '.';
         }
         else if(arrayOfKeys.includes("74") && arrayOfKeys.includes("75") &&  arrayOfKeys.includes("68")){
-            document.getElementById('text').innerHTML += 'j';
+            return 'j';
         }
     }
     else if(arrayOfKeys.length==4){
         if(arrayOfKeys.includes("76")){
             if(arrayOfKeys.includes("75")){
                 if(arrayOfKeys.includes("68") && arrayOfKeys.includes("74")){
-                    document.getElementById('text').innerHTML += 'w';
+                    return 'w';
                 }
                 else if(arrayOfKeys.includes("70") && arrayOfKeys.includes("83")){
-                    document.getElementById('text').innerHTML += 'z';
+                    return 'z';
+                }
+                else if(arrayOfKeys.includes("83") && arrayOfKeys.includes("74")){
+                    return 'num';
                 }
             }
             else if(arrayOfKeys.includes("70") && arrayOfKeys.includes("83") && arrayOfKeys.includes("68")){
-                document.getElementById('text').innerHTML += 'v';
+                return 'v';
             }
             else if(arrayOfKeys.includes("70") && arrayOfKeys.includes("83") && arrayOfKeys.includes("74")){
-                document.getElementById('text').innerHTML += 'x';
+                return 'x';
             }
         }
         else if(arrayOfKeys.includes("70") && arrayOfKeys.includes("75")){
             if(arrayOfKeys.includes("68") && arrayOfKeys.includes("74")){
-                document.getElementById('text').innerHTML += 'g';
+                return 'g';
             }
             else if(arrayOfKeys.includes("83") && arrayOfKeys.includes("74")){
-                document.getElementById('text').innerHTML += 'n';
+                return 'n';
             }
             else if(arrayOfKeys.includes("83") && arrayOfKeys.includes("68")){
-                document.getElementById('text').innerHTML += 'r';
+                return 'r';
             }
         }
         else if(arrayOfKeys.includes("83") && arrayOfKeys.includes("74")){
             if(arrayOfKeys.includes("70") && arrayOfKeys.includes("68")){
-                document.getElementById('text').innerHTML += 'p';
+                return 'p';
             }
             else 
             if(arrayOfKeys.includes("75") && arrayOfKeys.includes("68")){
-                document.getElementById('text').innerHTML += 't';
+                return 't';
             }
         }
     }
     else if(arrayOfKeys.length==5){
         if(arrayOfKeys.includes("70") && arrayOfKeys.includes("68") && arrayOfKeys.includes("83") && arrayOfKeys.includes("74") && arrayOfKeys.includes("75")){
-            document.getElementById('text').innerHTML += 'q';
+            return 'q';
         }
         else if(arrayOfKeys.includes("70") && arrayOfKeys.includes("83") && arrayOfKeys.includes("74") && arrayOfKeys.includes("76") && arrayOfKeys.includes("75")){
-            document.getElementById('text').innerHTML += 'y';
+            return 'y';
         }
     }
     
