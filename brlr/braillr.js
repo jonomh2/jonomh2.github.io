@@ -91,7 +91,7 @@ window.addEventListener('keyup', (event) => {
                 if(letter == "num"){
                     numLock = true;
                 }
-                if(!numLock){
+                if(!numLock && letter != "up"){
                     if(nextUpper || upperLock){
                         document.getElementById('text').innerHTML += letter.toUpperCase();
                         nextUpper = false;
@@ -100,7 +100,7 @@ window.addEventListener('keyup', (event) => {
                         document.getElementById('text').innerHTML += letter;
                     }
                 }
-                else{
+                else if(letter != "up"){
                     if(letter == "a"){
                         document.getElementById('text').innerHTML += "1";
                         numLock = false;
