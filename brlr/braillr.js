@@ -86,6 +86,7 @@ window.addEventListener('keyup', (event) => {
                     }
                     else{
                         nextUpper = true;
+                        upperLock = false;
                     }
                 }
                 if(letter == "num"){
@@ -205,6 +206,9 @@ function toLetter(arrayOfKeys){
             else if(arrayOfKeys.includes("75")){
                 return ':';
             }
+            else if(arrayOfKeys.includes("83")){
+                return ';';
+            }
         }
         else if(arrayOfKeys.includes("70")){
             if(arrayOfKeys.includes("74")){
@@ -239,6 +243,14 @@ function toLetter(arrayOfKeys){
                     return 'u';
                 }
             }
+            else if(arrayOfKeys.includes("68")){
+                if(arrayOfKeys.includes("75")){
+                    return '!';
+                }
+                else if(arrayOfKeys.includes("76")){
+                    return '?';
+                }
+            }
         }
         else if(arrayOfKeys.includes("70")){
             if(arrayOfKeys.includes("68")){
@@ -253,8 +265,13 @@ function toLetter(arrayOfKeys){
                 return 'd';
             }
         }
-        else if(arrayOfKeys.includes("76") && arrayOfKeys.includes("75") &&  arrayOfKeys.includes("68")){
-            return '.';
+        else if(arrayOfKeys.includes("76") && arrayOfKeys.includes("75")){
+            if(arrayOfKeys.includes("68")){
+                return '.';
+            }
+            else if(arrayOfKeys.includes("83")){
+                return '"';
+            }
         }
         else if(arrayOfKeys.includes("74") && arrayOfKeys.includes("75") &&  arrayOfKeys.includes("68")){
             return 'j';
