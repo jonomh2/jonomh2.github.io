@@ -191,6 +191,9 @@ function toLetter(arrayOfKeys){
         else if(arrayOfKeys[0]=="68"){
             return ',';
         }
+        else if(arrayOfKeys[0]=="83"){
+            return '\'';
+        }
         else if(arrayOfKeys[0]=="76"){
             return 'up';
         }
