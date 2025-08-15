@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickMD</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: white;
+            --text-color: #1a1a1a;
+            --text-muted: #6c757d;
+            --border-color: #e9ecef;
+            --accent-color: #1a1a1a;
+            --secondary-bg: #f8f9fa;
+            --success-bg: #d1e7dd;
+            --success-color: #0f5132;
+            --warning-bg: #fff3cd;
+            --warning-color: #664d03;
+            --error-bg: #f8d7da;
+            --error-color: #842029;
+        }
+
+        .dark-theme {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #ffffff;
+            --text-muted: #9ca3af;
+            --border-color: #404040;
+            --accent-color: #ffffff;
+            --secondary-bg: #404040;
+            --success-bg: #065f46;
+            --success-color: #d1fae5;
+            --warning-bg: #78350f;
+            --warning-color: #fef3c7;
+            --error-bg: #7f1d1d;
+            --error-color: #fecaca;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-color);
+            min-height: 100vh;
+            color: var(--text-color);
+            line-height: 1.4;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+            letter-spacing: -0.5px;
+        }
+
+        .theme-toggle {
+            background: var(--secondary-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-color);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            flex: 1;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .mode-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .mode-btn {
+            padding: 24px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            border-color: #6c757d;
+        }
+
+        .mode-btn.selected {
+            border-color: #1a1a1a;
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .mode-btn h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .mode-btn p {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+            background: white;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #1a1a1a;
+        }
+
+        .btn {
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn.secondary {
+            background: white;
+            color: #1a1a1a;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn.secondary:hover {
+            border-color: #1a1a1a;
+            opacity: 1;
+        }
+
+        .btn.danger {
+            background: #dc3545;
+        }
+
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status.connected {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .status.waiting {
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .main-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            height: 200px;
+        }
+
+        .display-card {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .display-card.active {
+            transform: scale(1.02);
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .display-value {
+            font-size: 3rem;
+            font-weight: 300;
+            color: var(--text-color);
+            letter-spacing: -2px;
+            transition: all 0.3s ease;
+        }
+
+        .placeholder {
+            opacity: 0.3;
+            font-style: italic;
+        }
+
+        .controls-section {
+            margin-bottom: 30px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .control-btn {
+            padding: 20px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: center;
+            color: var(--text-color);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            border-color: var(--accent-color);
+            background: var(--accent-color);
+            color: var(--bg-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .nashville-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+        }
+
+        .nashville-btn {
+            aspect-ratio: 1;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            min-height: 70px;
+        }
+
+        .nashville-btn:hover {
+            border-color: var(--accent-color);
+            background: var(--accent-color);
+            color: var(--bg-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .room-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .room-info strong {
+            color: #1a1a1a;
+        }
+
+        .room-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .room-actions button {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            min-width: auto;
+            width: auto;
+        }
+
+        .participants {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .participants h3 {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .participant-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .participant {
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .room-item {
+            padding: 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .room-item:hover {
+            border-color: #1a1a1a;
+            background: #f8f9fa;
+        }
+
+        .room-item h4 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .room-item p {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .room-id {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.75rem;
+            color: #6c757d;
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .manual-join {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+                padding-top: 10px;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .mode-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .main-display {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+
+            .display-card {
+                padding: 16px 12px;
+                min-height: 80px;
+            }
+
+            .display-value {
+                font-size: 1.75rem;
+            }
+
+            .controls-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+
+            .control-btn {
+                padding: 10px 6px;
+                font-size: 0.8rem;
+            }
+
+            .nashville-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 6px;
+            }
+
+            .nashville-btn {
+                font-size: 1rem;
+            }
+
+            .room-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 20px;
+                padding-bottom: 12px;
+            }
+
+            .controls-section {
+                margin-bottom: 16px;
+            }
+
+            .participants {
+                margin-top: 16px;
+                padding-top: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .controls-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .control-btn {
+                padding: 8px 4px;
+                font-size: 0.75rem;
+            }
+
+            .room-actions {
+                width: 100%;
+                justify-content: stretch;
+            }
+
+            .room-actions button {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">QuickMD</div>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+        </div>
+
+        <div class="card" id="setup">
+            <div class="mode-selection">
+                <div class="mode-btn" onclick="selectMode('host')">
+                    <h3>Host</h3>
+                    <p>Create and control room</p>
+                </div>
+                <div class="mode-btn" onclick="selectMode('client')">
+                    <h3>Join</h3>
+                    <p>Connect to existing room</p>
+                </div>
+            </div>
+
+            <div class="room-section" id="roomSection" style="display: none;">
+                <div class="input-group" id="hostRoomInput">
+                    <input type="text" id="roomInput" placeholder="Room name">
+                </div>
+                <div id="availableRooms" style="display: none;">
+                    <div class="section-title">Available Rooms</div>
+                    <div id="roomsList"></div>
+                    <div class="status" id="noRoomsMessage" style="display: none; margin: 16px 0;">No rooms available</div>
+                    
+                    <div class="manual-join">
+                        <div class="section-title">Manual Join</div>
+                        <div class="input-group">
+                            <input type="text" id="manualRoomId" placeholder="Enter Room ID">
+                        </div>
+                        <button class="btn secondary" onclick="manualJoin()">Join Room</button>
+                    </div>
+                </div>
+                <button class="btn" onclick="handleRoom()" id="roomBtn">Create Room</button>
+            </div>
+
+            <div class="status" id="status" style="display: none;"></div>
+        </div>
+
+        <div class="card" id="app" style="display: none;">
+            <div class="room-header" id="clientHeader" style="display: none;">
+                <div class="room-info">
+                    <strong id="currentRoom"></strong>
+                </div>
+                <div class="room-actions">
+                    <button class="btn danger" onclick="endRoom()" id="endRoomBtn" style="display: none;">End Room</button>
+                </div>
+            </div>
+
+            <div class="main-display">
+                <div class="display-card" id="partCard">
+                    <div class="display-value" id="currentPart">
+                        <span class="placeholder">—</span>
+                    </div>
+                </div>
+                <div class="display-card" id="nashvilleCard">
+                    <div class="display-value" id="nashvilleNumber">
+                        <span class="placeholder">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="hostControls" style="display: none;">
+                <div class="controls-section">
+                    <div class="controls-grid">
+                        <button class="control-btn" onclick="sendPart('Intro')">Intro</button>
+                        <button class="control-btn" onclick="sendPart('V1')">Verse 1</button>
+                        <button class="control-btn" onclick="sendPart('V2')">Verse 2</button>
+                        <button class="control-btn" onclick="sendPart('PC')">Pre-Chorus</button>
+                        <button class="control-btn" onclick="sendPart('Chorus')">Chorus</button>
+                        <button class="control-btn" onclick="sendPart('Bridge')">Bridge</button>
+                        <button class="control-btn" onclick="sendPart('Tag')">Tag</button>
+                        <button class="control-btn" onclick="sendPart('Outro')">Outro</button>
+                    </div>
+                </div>
+
+                <div class="controls-section">
+                    <div class="nashville-grid">
+                        <button class="nashville-btn" onclick="sendNashville('1')">1</button>
+                        <button class="nashville-btn" onclick="sendNashville('2')">2</button>
+                        <button class="nashville-btn" onclick="sendNashville('3')">3</button>
+                        <button class="nashville-btn" onclick="sendNashville('4')">4</button>
+                        <button class="nashville-btn" onclick="sendNashville('5')">5</button>
+                        <button class="nashville-btn" onclick="sendNashville('6')">6</button>
+                        <button class="nashville-btn" onclick="sendNashville('7')">7</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="participants">
+                <h3>Connected (<span id="participantCount">0</span>)</h3>
+                <div class="participant-list" id="participantList"></div>
+            </div>
+
+            <div class="peer-id" id="peerId" style="display: none;">
+                <strong>Room ID:</strong> <span id="peerIdValue"></span><br>
+                <small>Share this ID with musicians to join</small>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.4.7/peerjs.min.js"></script>
+    <script>
+        let peer = null;
+        let connections = new Map();
+        let currentMode = null;
+        let currentRoom = null;
+        let isHost = false;
+        let hostConnection = null;
+        let discoveryPeer = null;
+        let broadcastChannel = null;
+        let availableRooms = new Map();
+        let heartbeatInterval = null;
+
+        // Well-known discovery peer IDs for cross-device discovery
+        const DISCOVERY_PREFIXES = ['qmd-discovery-', 'qmd-beacon-', 'qmd-finder-'];
+        const DISCOVERY_SUFFIXES = ['alpha', 'beta', 'gamma', 'delta', 'echo', 'foxtrot'];
+
+        function selectMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.closest('.mode-btn').classList.add('selected');
+            currentMode = mode;
+            
+            const roomSection = document.getElementById('roomSection');
+            const roomBtn = document.getElementById('roomBtn');
+            const hostRoomInput = document.getElementById('hostRoomInput');
+            const availableRoomsDiv = document.getElementById('availableRooms');
+            
+            roomSection.style.display = 'block';
+            
+            if (mode === 'host') {
+                roomBtn.textContent = 'Create Room';
+                hostRoomInput.style.display = 'block';
+                availableRoomsDiv.style.display = 'none';
+                isHost = true;
+            } else {
+                roomBtn.textContent = 'Refresh Rooms';
+                hostRoomInput.style.display = 'none';
+                availableRoomsDiv.style.display = 'block';
+                isHost = false;
+                discoverRooms();
+            }
+        }
+
+        function generateRoomId() {
+            return 'qmd-room-' + Math.random().toString(36).substr(2, 8);
+        }
+
+        function generateDiscoveryId() {
+            const prefix = DISCOVERY_PREFIXES[Math.floor(Math.random() * DISCOVERY_PREFIXES.length)];
+            const suffix = DISCOVERY_SUFFIXES[Math.floor(Math.random() * DISCOVERY_SUFFIXES.length)];
+            return prefix + suffix;
+        }
+
+        function handleRoom() {
+            if (isHost) {
+                const roomInput = document.getElementById('roomInput').value.trim();
+                if (!roomInput) {
+                    showStatus('Please enter a room name', 'error');
+                    return;
+                }
+                createRoom(roomInput);
+            } else {
+                discoverRooms();
+            }
+        }
+
+        function createRoom(roomName) {
+            showStatus('Creating room...', 'waiting');
+            
+            const roomId = generateRoomId();
+            peer = new Peer(roomId);
+            currentRoom = roomName;
+
+            peer.on('open', function(id) {
+                showStatus('Room created! Share Room ID with musicians', 'connected');
+                showApp();
+                document.getElementById('peerIdValue').textContent = id;
+                document.getElementById('peerId').style.display = 'block';
+                updateParticipants();
+                
+                // Start discovery beacon
+                startDiscoveryBeacon();
+                
+                // Start heartbeat for room maintenance
+                startHeartbeat();
+            });
+
+            peer.on('connection', function(conn) {
+                conn.on('open', function() {
+                    connections.set(conn.peer, conn);
+                    updateParticipants();
+                    
+                    // Send room info to new connection
+                    conn.send({
+                        type: 'room_info',
+                        roomName: currentRoom,
+                        currentPart: getDisplayValue('currentPart'),
+                        nashvilleNumber: getDisplayValue('nashvilleNumber')
+                    });
+                });
+
+                conn.on('data', function(data) {
+                    if (data.type === 'discovery_request') {
+                        conn.send({
+                            type: 'discovery_response',
+                            roomId: peer.id,
+                            roomName: currentRoom,
+                            participants: connections.size + 1
+                        });
+                    }
+                });
+
+                conn.on('close', function() {
+                    connections.delete(conn.peer);
+                    updateParticipants();
+                });
+
+                conn.on('error', function(err) {
+                    console.error('Connection error:', err);
+                    connections.delete(conn.peer);
+                    updateParticipants();
+                });
+            });
+
+            peer.on('error', function(err) {
+                console.error('Peer error:', err);
+                showStatus('Error creating room: ' + err.message, 'error');
+            });
+        }
+
+        function startDiscoveryBeacon() {
+            // Create multiple discovery peers with well-known IDs
+            const beacons = [];
+            
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const beaconId = generateDiscoveryId();
+                    const beacon = new Peer(beaconId);
+                    
+                    beacon.on('open', function() {
+                        beacons.push(beacon);
+                    });
+                    
+                    beacon.on('connection', function(conn) {
+                        conn.on('data', function(data) {
+                            if (data.type === 'discovery_request') {
+                                conn.send({
+                                    type: 'discovery_response',
+                                    roomId: peer.id,
+                                    roomName: currentRoom,
+                                    participants: connections.size + 1
+                                });
+                            }
+                        });
+                    });
+                    
+                    beacon.on('error', function(err) {
+                        console.log('Beacon error:', err);
+                    });
+                }, i * 1000);
+            }
+            
+            // Clean up beacons when room ends
+            peer.on('close', function() {
+                beacons.forEach(beacon => {
+                    if (beacon && !beacon.destroyed) {
+                        beacon.destroy();
+                    }
+                });
+            });
+        }
+
+        function startHeartbeat() {
+            heartbeatInterval = setInterval(() => {
+                if (peer && peer.open) {
+                    // Maintain connections and discovery
+                    connections.forEach((conn, peerId) => {
+                        if (!conn.open) {
+                            connections.delete(peerId);
+                            updateParticipants();
+                        }
+                    });
+                } else {
+                    clearInterval(heartbeatInterval);
+                }
+            }, 10000);
+        }
+
+        function discoverRooms() {
+            showStatus('Searching for rooms...', 'waiting');
+            availableRooms.clear();
+            updateRoomsList();
+            
+            // Create discovery peer
+            if (discoveryPeer) {
+                discoveryPeer.destroy();
+            }
+            
+            discoveryPeer = new Peer();
+            
+            discoveryPeer.on('open', function() {
+                let attempts = 0;
+                let foundRooms = 0;
+                const maxAttempts = 18; // 3 prefixes × 6 suffixes
+                
+                // Try connecting to well-known discovery beacon IDs
+                DISCOVERY_PREFIXES.forEach((prefix, pi) => {
+                    DISCOVERY_SUFFIXES.forEach((suffix, si) => {
+                        setTimeout(() => {
+                            const beaconId = prefix + suffix;
+                            const conn = discoveryPeer.connect(beaconId);
+                            
+                            const timeout = setTimeout(() => {
+                                attempts++;
+                                if (attempts >= maxAttempts) {
+                                    finishDiscovery(foundRooms);
+                                }
+                            }, 3000);
+                            
+                            conn.on('open', function() {
+                                conn.send({ type: 'discovery_request' });
+                                
+                                conn.on('data', function(data) {
+                                    if (data.type === 'discovery_response') {
+                                        availableRooms.set(data.roomId, {
+                                            id: data.roomId,
+                                            name: data.roomName,
+                                            participants: data.participants
+                                        });
+                                        foundRooms++;
+                                        updateRoomsList();
+                                    }
+                                });
+                                
+                                setTimeout(() => {
+                                    clearTimeout(timeout);
+                                    conn.close();
+                                    attempts++;
+                                    if (attempts >= maxAttempts) {
+                                        finishDiscovery(foundRooms);
+                                    }
+                                }, 2000);
+                            });
+                            
+                            conn.on('error', function() {
+                                clearTimeout(timeout);
+                                attempts++;
+                                if (attempts >= maxAttempts) {
+                                    finishDiscovery(foundRooms);
+                                }
+                            });
+                        }, (pi * 6 + si) * 500); // Stagger connection attempts
+                    });
+                });
+            });
+            
+            discoveryPeer.on('error', function(err) {
+                console.log('Discovery peer error:', err);
+                finishDiscovery(0);
+            });
+        }
+
+        function finishDiscovery(foundRooms) {
+            setTimeout(() => {
+                if (foundRooms === 0) {
+                    showStatus('No rooms found on network', 'error');
+                    document.getElementById('noRoomsMessage').style.display = 'block';
+                } else {
+                    document.getElementById('status').style.display = 'none';
+                    document.getElementById('noRoomsMessage').style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        function updateRoomsList() {
+            const roomsList = document.getElementById('roomsList');
+            roomsList.innerHTML = '';
+
+            availableRooms.forEach(room => {
+                const roomDiv = document.createElement('div');
+                roomDiv.className = 'room-item';
+                roomDiv.onclick = () => joinSpecificRoom(room.id, room.name);
+                
+                roomDiv.innerHTML = `
+                    <div>
+                        <h4>${room.name}</h4>
+                        <p>${room.participants} participant${room.participants !== 1 ? 's' : ''}</p>
+                    </div>
+                    <div class="room-id">${room.id}</div>
+                `;
+                
+                roomsList.appendChild(roomDiv);
+            });
+        }
+
+        function joinSpecificRoom(roomId, roomName) {
+            currentRoom = roomName;
+            joinRoom(roomId);
+        }
+
+        function manualJoin() {
+            const roomId = document.getElementById('manualRoomId').value.trim();
+            if (!roomId) {
+                showStatus('Please enter a Room ID', 'error');
+                return;
+            }
+            joinRoom(roomId);
+        }
+
+        function joinRoom(roomId) {
+            showStatus('Connecting...', 'waiting');
+            
+            peer = new Peer();
+
+            peer.on('open', function(id) {
+                hostConnection = peer.connect(roomId);
+                
+                hostConnection.on('open', function() {
+                    showStatus('Connected!', 'connected');
+                    showApp();
+                    
+                    // Request room info
+                    hostConnection.send({ type: 'discovery_request' });
+                });
+
+                hostConnection.on('data', function(data) {
+                    handleIncomingData(data);
+                });
+
+                hostConnection.on('close', function() {
+                    showStatus('Connection lost', 'error');
+                    setTimeout(returnToStart, 2000);
+                });
+
+                hostConnection.on('error', function(err) {
+                    console.error('Connection error:', err);
+                    showStatus('Failed to connect: ' + err.message, 'error');
+                });
+            });
+
+            peer.on('error', function(err) {
+                console.error('Peer error:', err);
+                showStatus('Connection failed: ' + err.message, 'error');
+            });
+        }
+
+        function handleIncomingData(data) {
+            switch(data.type) {
+                case 'room_info':
+                case 'discovery_response':
+                    if (data.roomName) {
+                        currentRoom = data.roomName;
+                        document.getElementById('currentRoom').textContent = currentRoom;
+                    }
+                    if (data.currentPart && data.currentPart !== '—') {
+                        updateDisplay('currentPart', data.currentPart);
+                    }
+                    if (data.nashvilleNumber && data.nashvilleNumber !== '—') {
+                        updateDisplay('nashvilleNumber', data.nashvilleNumber);
+                    }
+                    break;
+                case 'part_update':
+                    updateDisplay('currentPart', data.part);
+                    break;
+                case 'nashville_update':
+                    updateDisplay('nashvilleNumber', data.number);
+                    break;
+                case 'room_ended':
+                    showStatus('Room ended by host', 'error');
+                    setTimeout(returnToStart, 2000);
+                    break;
+            }
+        }
+
+        function getDisplayValue(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent.trim();
+            return text === '—' ? '' : text;
+        }
+
+        function updateDisplay(elementId, value) {
+            const element = document.getElementById(elementId);
+            const cardElement = document.getElementById(elementId === 'currentPart' ? 'partCard' : 'nashvilleCard');
+            
+            element.innerHTML = value;
+            
+            // Add active state to card
+            cardElement.classList.add('active');
+            
+            // Auto-clear after 10 seconds
+            setTimeout(() => {
+                element.innerHTML = '<span class="placeholder">—</span>';
+                cardElement.classList.remove('active');
+            }, 10000);
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-theme');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialize theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeToggle.textContent = '☀️';
+            }
+        });
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+
+        function showApp() {
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            
+            document.getElementById('currentRoom').textContent = currentRoom;
+            
+            if (isHost) {
+                document.getElementById('hostControls').style.display = 'block';
+                document.getElementById('endRoomBtn').style.display = 'block';
+                document.getElementById('clientHeader').style.display = 'block';
+            } else {
+                document.getElementById('clientHeader').style.display = 'none';
+            }
+        }
+
+        function sendPart(part) {
+            updateDisplay('currentPart', part);
+            broadcast({
+                type: 'part_update',
+                part: part
+            });
+        }
+
+        function sendNashville(number) {
+            updateDisplay('nashvilleNumber', number);
+            broadcast({
+                type: 'nashville_update',
+                number: number
+            });
+        }
+
+        function broadcast(data) {
+            connections.forEach(conn => {
+                if (conn.open) {
+                    conn.send(data);
+                }
+            });
+        }
+
+        function updateParticipants() {
+            const participantList = document.getElementById('participantList');
+            const participantCount = document.getElementById('participantCount');
+            
+            participantList.innerHTML = '';
+            
+            if (isHost) {
+                const hostDiv = document.createElement('div');
+                hostDiv.className = 'participant';
+                hostDiv.textContent = 'You (Host)';
+                participantList.appendChild(hostDiv);
+            }
+
+            let count = isHost ? 1 : 0;
+            
+            connections.forEach((conn, peerId) => {
+                if (conn.open) {
+                    const div = document.createElement('div');
+                    div.className = 'participant';
+                    div.textContent = `Musician ${peerId.substr(-4)}`;
+                    participantList.appendChild(div);
+                    count++;
+                }
+            });
+
+            if (hostConnection && hostConnection.open && !isHost) {
+                const hostDiv = document.createElement('div');
+                hostDiv.className = 'participant';
+                hostDiv.textContent = 'Host';
+                participantList.appendChild(hostDiv);
+                count++;
+            }
+
+            if (!isHost && count === 0) {
+                count = 1; // Count self
+                const selfDiv = document.createElement('div');
+                selfDiv.className = 'participant';
+                selfDiv.textContent = 'You';
+                participantList.appendChild(selfDiv);
+            }
+            
+            participantCount.textContent = count;
+        }
+
+        function endRoom() {
+            if (isHost) {
+                const confirmDialog = confirm('Are you sure you want to end this room?\n\nThis will disconnect all musicians.');
+                
+                if (confirmDialog) {
+                    // Send end room signal to all connected clients
+                    broadcast({
+                        type: 'room_ended'
+                    });
+                    
+                    showStatus('Room ended. Disconnecting...', 'waiting');
+                    
+                    // Give time for the message to be sent, then close everything
+                    setTimeout(() => {
+                        returnToStart();
+                    }, 1500);
+                }
+            }
+        }
+
+        function returnToStart() {
+            // Clean up all connections and peers
+            if (peer) {
+                peer.destroy();
+            }
+            if (discoveryPeer) {
+                discoveryPeer.destroy();
+            }
+            if (broadcastChannel) {
+                broadcastChannel.close();
+            }
+            if (heartbeatInterval) {
+                clearInterval(heartbeatInterval);
+            }
+            
+            connections.clear();
+            availableRooms.clear();
+            hostConnection = null;
+            currentRoom = null;
+            currentMode = null;
+            isHost = false;
+            peer = null;
+            discoveryPeer = null;
+            broadcastChannel = null;
+            heartbeatInterval = null;
+
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('setup').style.display = 'block';
+            document.getElementById('status').style.display = 'none';
+            document.getElementById('roomSection').style.display = 'none';
+            document.getElementById('peerId').style.display = 'none';
+            document.getElementById('hostControls').style.display = 'none';
+            document.getElementById('endRoomBtn').style.display = 'none';
+            document.getElementById('availableRooms').style.display = 'none';
+            document.getElementById('hostRoomInput').style.display = 'block';
+            
+            document.getElementById('currentPart').innerHTML = '<span class="placeholder">—</span>';
+            document.getElementById('nashvilleNumber').innerHTML = '<span class="placeholder">—</span>';
+            document.getElementById('roomInput').value = '';
+            document.getElementById('manualRoomId').value = '';
+            document.getElementById('roomsList').innerHTML = '';
+            
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('selected'));
+        }
+
+        // Auto-reconnection for clients
+        setInterval(() => {
+            if (!isHost && hostConnection && !hostConnection.open && peer) {
+                updateParticipants();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
