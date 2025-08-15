@@ -19,6 +19,12 @@
             --warning-color: #664d03;
             --error-bg: #f8d7da;
             --error-color: #842029;
+            
+            /* Dynamic button colors */
+            --build-color: #3b82f6;
+            --quiet-color: #10b981;
+            --big-color: #f59e0b;
+            --build-cut-color: #8b5cf6;
         }
 
         .dark-theme {
@@ -35,6 +41,12 @@
             --warning-color: #fef3c7;
             --error-bg: #7f1d1d;
             --error-color: #fecaca;
+            
+            /* Dynamic button colors for dark theme */
+            --build-color: #60a5fa;
+            --quiet-color: #34d399;
+            --big-color: #fbbf24;
+            --build-cut-color: #a78bfa;
         }
 
         * {
@@ -46,87 +58,84 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg-color);
-            min-height: 100vh;
             color: var(--text-color);
             line-height: 1.4;
             transition: background 0.3s ease, color 0.3s ease;
+            height: 100vh;
+            overflow: hidden;
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
+            height: 100vh;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px 0;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: var(--text-color);
-            letter-spacing: -0.5px;
         }
 
         .theme-toggle {
             background: var(--secondary-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 8px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 16px;
             color: var(--text-color);
             transition: all 0.2s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .theme-toggle:hover {
             border-color: var(--accent-color);
         }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid var(--border-color);
+        /* Setup Screen */
+        .setup-screen {
             flex: 1;
-            transition: background 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .setup-theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
         }
 
         .mode-selection {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 32px;
+            gap: 15px;
+            width: 100%;
         }
 
         .mode-btn {
-            padding: 24px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            background: white;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
         }
 
         .mode-btn:hover {
-            border-color: #6c757d;
+            border-color: var(--accent-color);
         }
 
         .mode-btn.selected {
-            border-color: #1a1a1a;
-            background: #1a1a1a;
-            color: white;
+            border-color: var(--accent-color);
+            background: var(--accent-color);
+            color: var(--bg-color);
         }
 
         .mode-btn h3 {
@@ -141,30 +150,30 @@
         }
 
         .input-group {
-            margin-bottom: 24px;
+            width: 100%;
         }
 
         .input-group input {
             width: 100%;
-            padding: 16px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
             font-size: 1rem;
-            transition: border-color 0.2s ease;
-            background: white;
+            background: var(--card-bg);
+            color: var(--text-color);
         }
 
         .input-group input:focus {
             outline: none;
-            border-color: #1a1a1a;
+            border-color: var(--accent-color);
         }
 
         .btn {
-            background: #1a1a1a;
-            color: white;
+            background: var(--accent-color);
+            color: var(--bg-color);
             border: none;
-            padding: 16px 24px;
-            border-radius: 8px;
+            padding: 15px 24px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
@@ -182,224 +191,60 @@
         }
 
         .btn.secondary {
-            background: white;
-            color: #1a1a1a;
-            border: 2px solid #e9ecef;
+            background: var(--card-bg);
+            color: var(--accent-color);
+            border: 2px solid var(--border-color);
         }
 
         .btn.secondary:hover {
-            border-color: #1a1a1a;
+            border-color: var(--accent-color);
             opacity: 1;
         }
 
         .btn.danger {
             background: #dc3545;
+            color: white;
         }
 
         .status {
             text-align: center;
-            margin: 20px 0;
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 0.9rem;
             font-weight: 500;
+            width: 100%;
         }
 
         .status.connected {
-            background: #d1e7dd;
-            color: #0f5132;
+            background: var(--success-bg);
+            color: var(--success-color);
         }
 
         .status.waiting {
-            background: #fff3cd;
-            color: #664d03;
+            background: var(--warning-bg);
+            color: var(--warning-color);
         }
 
         .status.error {
-            background: #f8d7da;
-            color: #842029;
-        }
-
-        .main-display {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-            height: 200px;
-        }
-
-        .display-card {
-            background: var(--secondary-bg);
-            border-radius: 12px;
-            padding: 30px 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            border: 2px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-
-        .display-card.active {
-            transform: scale(1.02);
-            border-color: var(--accent-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .display-value {
-            font-size: 3rem;
-            font-weight: 300;
-            color: var(--text-color);
-            letter-spacing: -2px;
-            transition: all 0.3s ease;
-        }
-
-        .placeholder {
-            opacity: 0.3;
-            font-style: italic;
-        }
-
-        .controls-section {
-            margin-bottom: 30px;
-        }
-
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .control-btn {
-            padding: 20px 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            background: var(--card-bg);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 600;
-            font-size: 1rem;
-            text-align: center;
-            color: var(--text-color);
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .control-btn:hover {
-            border-color: var(--accent-color);
-            background: var(--accent-color);
-            color: var(--bg-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .nashville-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 15px;
-        }
-
-        .nashville-btn {
-            aspect-ratio: 1;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            background: var(--card-bg);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 700;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-color);
-            min-height: 70px;
-        }
-
-        .nashville-btn:hover {
-            border-color: var(--accent-color);
-            background: var(--accent-color);
-            color: var(--bg-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .room-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .room-info {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-
-        .room-info strong {
-            color: #1a1a1a;
-        }
-
-        .room-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .room-actions button {
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            min-width: auto;
-            width: auto;
-        }
-
-        .participants {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .participants h3 {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-bottom: 12px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .participant-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .participant {
-            background: #e9ecef;
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 0.85rem;
-            font-weight: 500;
+            background: var(--error-bg);
+            color: var(--error-color);
         }
 
         .room-item {
-            padding: 16px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            background: white;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .room-item:hover {
-            border-color: #1a1a1a;
-            background: #f8f9fa;
+            border-color: var(--accent-color);
         }
 
         .room-item h4 {
@@ -410,135 +255,409 @@
 
         .room-item p {
             font-size: 0.8rem;
-            color: #6c757d;
+            color: var(--text-muted);
         }
 
-        .room-id {
-            font-family: 'SF Mono', Monaco, monospace;
-            font-size: 0.75rem;
-            color: #6c757d;
-            background: #f8f9fa;
+        /* App Screen */
+        .app-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Host Layout */
+        .host-layout {
+            display: grid;
+            grid-template-rows: 100px 1fr;
+            height: 100vh;
+            gap: 15px;
+        }
+
+        .host-info {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 25px 30px;
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .host-info-left {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+            font-size: 1.8rem;
+        }
+
+        .display-small {
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: var(--accent-color);
+        }
+
+        .host-info button {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .host-controls {
+            display: grid;
+            grid-template-rows: 3fr 1fr;
+            gap: 0;
+            height: calc(100vh - 130px);
+        }
+
+        .part-controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 0;
+        }
+
+        .nashville-controls {
+            display: grid;
+            grid-template-columns: auto repeat(7, 1fr);
+            gap: 0;
+        }
+
+        .control-btn, .nashville-btn {
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover, .nashville-btn:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .control-btn {
+            font-size: 3.5rem;
+        }
+
+        .nashville-btn {
+            font-size: 5.5rem;
+        }
+
+        .progression-toggle {
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 2rem;
+            font-weight: 700;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .progression-toggle.active {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .progression-toggle:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        /* Dynamic song part button styles */
+        .control-btn.build {
+            background: var(--build-color);
+            color: white;
+        }
+
+        .control-btn.build:hover {
+            background: var(--build-color);
+            opacity: 0.8;
+        }
+
+        .control-btn.quiet {
+            background: var(--quiet-color);
+            color: white;
+        }
+
+        .control-btn.quiet:hover {
+            background: var(--quiet-color);
+            opacity: 0.8;
+        }
+
+        .control-btn.big {
+            background: var(--big-color);
+            color: white;
+        }
+
+        .control-btn.big:hover {
+            background: var(--big-color);
+            opacity: 0.8;
+        }
+
+        .control-btn.build-cut {
+            background: var(--build-cut-color);
+            color: white;
+        }
+
+        .control-btn.build-cut:hover {
+            background: var(--build-cut-color);
+            opacity: 0.8;
+        }
+
+        /* Client Layout */
+        .client-layout {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .display-large {
+            font-size: 8rem;
+            font-weight: 300;
+            color: var(--text-color);
+            letter-spacing: -3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .display-label {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .display-section {
+            padding: 50px;
+            border-radius: 25px;
+            background: var(--card-bg);
+            border: 3px solid var(--border-color);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .display-section.active {
+            border-color: var(--accent-color);
+            transform: scale(1.02);
+            box-shadow: 0 12px 48px rgba(0,0,0,0.2);
+        }
+
+        .display-section.flash {
+            animation: flash 0.3s ease-out;
+        }
+
+        @keyframes flash {
+            0% {
+                background: var(--accent-color);
+                color: var(--bg-color);
+                transform: scale(1.05);
+            }
+            50% {
+                background: var(--accent-color);
+                color: var(--bg-color);
+                transform: scale(1.05);
+            }
+            100% {
+                background: var(--card-bg);
+                color: var(--text-color);
+                transform: scale(1);
+            }
+        }
+
+        .placeholder {
+            opacity: 0.3;
+            font-style: italic;
+        }
+
+        /* Participants */
+        .participants {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 15px;
+            font-size: 0.85rem;
+            margin-top: 15px;
+        }
+
+        .participant-count {
+            color: var(--text-muted);
+            margin-right: 10px;
+        }
+
+        .participant {
+            display: inline-block;
+            background: var(--secondary-bg);
             padding: 4px 8px;
-            border-radius: 4px;
+            border-radius: 12px;
+            margin-right: 8px;
+            font-size: 0.8rem;
         }
 
-        .manual-join {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #e9ecef;
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
             .container {
-                padding: 15px;
+                padding: 10px;
             }
 
-            .header {
-                margin-bottom: 20px;
-                padding-top: 10px;
-            }
-
-            .logo {
-                font-size: 2rem;
-            }
-
-            .card {
-                padding: 20px;
-            }
-
-            .mode-selection {
-                grid-template-columns: 1fr;
-            }
-
-            .main-display {
-                grid-template-columns: 1fr;
-                gap: 12px;
-                margin-bottom: 20px;
-            }
-
-            .display-card {
-                padding: 16px 12px;
-                min-height: 80px;
-            }
-
-            .display-value {
-                font-size: 1.75rem;
-            }
-
-            .controls-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 6px;
+            .part-controls {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(6, 1fr);
             }
 
             .control-btn {
-                padding: 10px 6px;
-                font-size: 0.8rem;
-            }
-
-            .nashville-grid {
-                grid-template-columns: repeat(7, 1fr);
-                gap: 6px;
+                font-size: 2.8rem;
             }
 
             .nashville-btn {
-                font-size: 1rem;
+                font-size: 4.2rem;
             }
 
-            .room-header {
+            .display-large {
+                font-size: 6rem;
+            }
+
+            .display-label {
+                font-size: 1.6rem;
+            }
+
+            .host-info-left {
                 flex-direction: column;
+                gap: 15px;
                 align-items: flex-start;
-                gap: 12px;
-                margin-bottom: 20px;
-                padding-bottom: 12px;
+                font-size: 1.4rem;
             }
 
-            .controls-section {
-                margin-bottom: 16px;
+            .display-small {
+                font-size: 1.8rem;
             }
 
-            .participants {
-                margin-top: 16px;
-                padding-top: 12px;
+            .host-info {
+                padding: 20px 25px;
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .host-controls {
+                grid-template-rows: 3fr 1fr;
             }
         }
 
         @media (max-width: 480px) {
-            .controls-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .mode-selection {
+                grid-template-columns: 1fr;
             }
 
             .control-btn {
-                padding: 8px 4px;
-                font-size: 0.75rem;
+                font-size: 2.2rem;
             }
 
-            .room-actions {
-                width: 100%;
-                justify-content: stretch;
+            .nashville-btn {
+                font-size: 3.5rem;
             }
 
-            .room-actions button {
-                flex: 1;
+            .display-large {
+                font-size: 4.5rem;
             }
+
+            .display-label {
+                font-size: 1.2rem;
+            }
+
+            .client-layout {
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .display-section {
+                padding: 30px 20px;
+            }
+
+            .host-info-left {
+                font-size: 1.2rem;
+                gap: 12px;
+            }
+
+            .display-small {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Landscape mode for client */
+        @media (orientation: landscape) and (max-height: 700px) {
+            .client-layout {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr;
+                gap: 20px;
+                padding: 15px;
+            }
+
+            .display-large {
+                font-size: 5rem;
+            }
+
+            .display-label {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Portrait mode gives less space to number buttons */
+        @media (orientation: portrait) {
+            .host-controls {
+                grid-template-rows: 4fr 1fr;
+            }
+        }
+
+        .room-section {
+            width: 100%;
+        }
+
+        .available-rooms {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+
+        .manual-join {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo">QuickMD</div>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
-        </div>
-
-        <div class="card" id="setup">
+        <!-- Setup Screen -->
+        <div class="setup-screen" id="setup">
+            <button class="theme-toggle setup-theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+            
             <div class="mode-selection">
                 <div class="mode-btn" onclick="selectMode('host')">
                     <h3>Host</h3>
-                    <p>Create and control room</p>
+                    <p>Create room</p>
                 </div>
                 <div class="mode-btn" onclick="selectMode('client')">
                     <h3>Join</h3>
-                    <p>Connect to existing room</p>
+                    <p>Connect to room</p>
                 </div>
             </div>
 
@@ -546,10 +665,10 @@
                 <div class="input-group" id="hostRoomInput">
                     <input type="text" id="roomInput" placeholder="Room name">
                 </div>
-                <div id="availableRooms" style="display: none;">
+                <div id="availableRooms" class="available-rooms" style="display: none;">
                     <div class="section-title">Available Rooms</div>
                     <div id="roomsList"></div>
-                    <div class="status" id="noRoomsMessage" style="display: none; margin: 16px 0;">No rooms available</div>
+                    <div class="status" id="noRoomsMessage" style="display: none;">No rooms available</div>
                     
                     <div class="manual-join">
                         <div class="section-title">Manual Join</div>
@@ -565,32 +684,22 @@
             <div class="status" id="status" style="display: none;"></div>
         </div>
 
-        <div class="card" id="app" style="display: none;">
-            <div class="room-header" id="clientHeader" style="display: none;">
-                <div class="room-info">
-                    <strong id="currentRoom"></strong>
-                </div>
-                <div class="room-actions">
-                    <button class="btn danger" onclick="endRoom()" id="endRoomBtn" style="display: none;">End Room</button>
-                </div>
-            </div>
-
-            <div class="main-display">
-                <div class="display-card" id="partCard">
-                    <div class="display-value" id="currentPart">
-                        <span class="placeholder">—</span>
+        <!-- App Screen -->
+        <div class="app-screen" id="app" style="display: none;">
+            <!-- Host Layout -->
+            <div class="host-layout" id="hostLayout" style="display: none;">
+                <div class="host-info">
+                    <div class="host-info-left">
+                        <div><strong id="currentRoom"></strong></div>
+                        <div>Part: <span class="display-small" id="currentPartHost">—</span></div>
+                        <div>Number: <span class="display-small" id="nashvilleNumberHost">—</span></div>
                     </div>
+                    <button class="theme-toggle" onclick="toggleTheme()" id="appThemeToggle">🌙</button>
+                    <button class="btn danger" onclick="endRoom()">End Room</button>
                 </div>
-                <div class="display-card" id="nashvilleCard">
-                    <div class="display-value" id="nashvilleNumber">
-                        <span class="placeholder">—</span>
-                    </div>
-                </div>
-            </div>
 
-            <div id="hostControls" style="display: none;">
-                <div class="controls-section">
-                    <div class="controls-grid">
+                <div class="host-controls">
+                    <div class="part-controls">
                         <button class="control-btn" onclick="sendPart('Intro')">Intro</button>
                         <button class="control-btn" onclick="sendPart('V1')">Verse 1</button>
                         <button class="control-btn" onclick="sendPart('V2')">Verse 2</button>
@@ -599,11 +708,14 @@
                         <button class="control-btn" onclick="sendPart('Bridge')">Bridge</button>
                         <button class="control-btn" onclick="sendPart('Tag')">Tag</button>
                         <button class="control-btn" onclick="sendPart('Outro')">Outro</button>
+                        <button class="control-btn build" onclick="sendPart('Build')">Build</button>
+                        <button class="control-btn quiet" onclick="sendPart('Quiet')">Quiet</button>
+                        <button class="control-btn big" onclick="sendPart('Big')">Big</button>
+                        <button class="control-btn build-cut" onclick="sendPart('Build to Cut Quiet')">Build to Cut Quiet</button>
                     </div>
-                </div>
 
-                <div class="controls-section">
-                    <div class="nashville-grid">
+                    <div class="nashville-controls">
+                        <button class="control-btn progression-toggle" onclick="toggleProgression()" id="progressionToggle">PROG</button>
                         <button class="nashville-btn" onclick="sendNashville('1')">1</button>
                         <button class="nashville-btn" onclick="sendNashville('2')">2</button>
                         <button class="nashville-btn" onclick="sendNashville('3')">3</button>
@@ -615,15 +727,31 @@
                 </div>
             </div>
 
-            <div class="participants">
-                <h3>Connected (<span id="participantCount">0</span>)</h3>
-                <div class="participant-list" id="participantList"></div>
-            </div>
+            <!-- Client Layout -->
+            <div class="client-layout" id="clientLayout" style="display: none;">
+                <div class="display-section" id="partSection">
+                    <div class="display-label">Song Part</div>
+                    <div class="display-large" id="currentPart">
+                        <span class="placeholder">—</span>
+                    </div>
+                </div>
 
-            <div class="peer-id" id="peerId" style="display: none;">
-                <strong>Room ID:</strong> <span id="peerIdValue"></span><br>
-                <small>Share this ID with musicians to join</small>
+                <div class="display-section" id="nashvilleSection">
+                    <div class="display-label">Nashville Number</div>
+                    <div class="display-large" id="nashvilleNumber">
+                        <span class="placeholder">—</span>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <div class="participants" id="participants" style="display: none;">
+            <span class="participant-count">Connected (<span id="participantCount">0</span>):</span>
+            <span id="participantList"></span>
+        </div>
+
+        <div style="display: none;" id="peerId">
+            <strong>Room ID:</strong> <span id="peerIdValue"></span>
         </div>
     </div>
 
@@ -639,6 +767,9 @@
         let broadcastChannel = null;
         let availableRooms = new Map();
         let heartbeatInterval = null;
+        let activeTimers = new Map(); // Track active display timers
+        let progressionMode = false; // Track progression toggle state
+        let currentProgression = []; // Track current chord progression
 
         // Well-known discovery peer IDs for cross-device discovery
         const DISCOVERY_PREFIXES = ['qmd-discovery-', 'qmd-beacon-', 'qmd-finder-'];
@@ -704,7 +835,6 @@
                 showStatus('Room created! Share Room ID with musicians', 'connected');
                 showApp();
                 document.getElementById('peerIdValue').textContent = id;
-                document.getElementById('peerId').style.display = 'block';
                 updateParticipants();
                 
                 // Start discovery beacon
@@ -723,8 +853,8 @@
                     conn.send({
                         type: 'room_info',
                         roomName: currentRoom,
-                        currentPart: getDisplayValue('currentPart'),
-                        nashvilleNumber: getDisplayValue('nashvilleNumber')
+                        currentPart: getDisplayValue('currentPartHost'),
+                        nashvilleNumber: getDisplayValue('nashvilleNumberHost')
                     });
                 });
 
@@ -915,7 +1045,6 @@
                         <h4>${room.name}</h4>
                         <p>${room.participants} participant${room.participants !== 1 ? 's' : ''}</p>
                     </div>
-                    <div class="room-id">${room.id}</div>
                 `;
                 
                 roomsList.appendChild(roomDiv);
@@ -1008,46 +1137,76 @@
         }
 
         function updateDisplay(elementId, value) {
-            const element = document.getElementById(elementId);
-            const cardElement = document.getElementById(elementId === 'currentPart' ? 'partCard' : 'nashvilleCard');
-            
-            element.innerHTML = value;
-            
-            // Add active state to card
-            cardElement.classList.add('active');
-            
-            // Auto-clear after 10 seconds
-            setTimeout(() => {
-                element.innerHTML = '<span class="placeholder">—</span>';
-                cardElement.classList.remove('active');
-            }, 10000);
+            // Clear any existing timer for this element
+            const timerKey = elementId;
+            if (activeTimers.has(timerKey)) {
+                clearTimeout(activeTimers.get(timerKey));
+                activeTimers.delete(timerKey);
+            }
+
+            // Update client display with flash effect
+            const clientElement = document.getElementById(elementId);
+            if (clientElement) {
+                clientElement.innerHTML = value;
+                
+                const sectionId = elementId === 'currentPart' ? 'partSection' : 'nashvilleSection';
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    // Add flash effect
+                    section.classList.add('flash');
+                    section.classList.add('active');
+                    
+                    // Remove flash effect after animation
+                    setTimeout(() => {
+                        section.classList.remove('flash');
+                    }, 300);
+                    
+                    // Set timer to clear display after 10 seconds
+                    const clearTimer = setTimeout(() => {
+                        clientElement.innerHTML = '<span class="placeholder">—</span>';
+                        section.classList.remove('active');
+                        activeTimers.delete(timerKey);
+                    }, 10000);
+                    
+                    activeTimers.set(timerKey, clearTimer);
+                }
+            }
+
+            // Update host display
+            const hostElementId = elementId === 'currentPart' ? 'currentPartHost' : 'nashvilleNumberHost';
+            const hostElement = document.getElementById(hostElementId);
+            if (hostElement) {
+                // Clear any existing timer for host element
+                const hostTimerKey = hostElementId;
+                if (activeTimers.has(hostTimerKey)) {
+                    clearTimeout(activeTimers.get(hostTimerKey));
+                    activeTimers.delete(hostTimerKey);
+                }
+
+                hostElement.textContent = value;
+                
+                // Set timer to clear host display after 10 seconds
+                const hostClearTimer = setTimeout(() => {
+                    hostElement.textContent = '—';
+                    activeTimers.delete(hostTimerKey);
+                }, 10000);
+                
+                activeTimers.set(hostTimerKey, hostClearTimer);
+            }
         }
 
         function toggleTheme() {
             const body = document.body;
-            const themeToggle = document.getElementById('themeToggle');
+            const themeToggles = document.querySelectorAll('.theme-toggle');
             
             if (body.classList.contains('dark-theme')) {
                 body.classList.remove('dark-theme');
-                themeToggle.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
+                themeToggles.forEach(toggle => toggle.textContent = '🌙');
             } else {
                 body.classList.add('dark-theme');
-                themeToggle.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
+                themeToggles.forEach(toggle => toggle.textContent = '☀️');
             }
         }
-
-        // Initialize theme on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedTheme = localStorage.getItem('theme');
-            const themeToggle = document.getElementById('themeToggle');
-            
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                themeToggle.textContent = '☀️';
-            }
-        });
 
         function showStatus(message, type) {
             const status = document.getElementById('status');
@@ -1062,12 +1221,23 @@
             
             document.getElementById('currentRoom').textContent = currentRoom;
             
+            // Sync theme toggle state
+            const setupToggle = document.getElementById('themeToggle');
+            const appToggle = document.getElementById('appThemeToggle');
+            if (appToggle) {
+                appToggle.textContent = setupToggle.textContent;
+            }
+            
             if (isHost) {
-                document.getElementById('hostControls').style.display = 'block';
-                document.getElementById('endRoomBtn').style.display = 'block';
-                document.getElementById('clientHeader').style.display = 'block';
+                document.getElementById('hostLayout').style.display = 'grid';
+                document.getElementById('clientLayout').style.display = 'none';
+                // Add participants to the host layout
+                document.getElementById('hostLayout').appendChild(document.getElementById('participants'));
+                document.getElementById('participants').style.display = 'block';
             } else {
-                document.getElementById('clientHeader').style.display = 'none';
+                document.getElementById('hostLayout').style.display = 'none';
+                document.getElementById('clientLayout').style.display = 'grid';
+                document.getElementById('participants').style.display = 'none';
             }
         }
 
@@ -1080,11 +1250,41 @@
         }
 
         function sendNashville(number) {
-            updateDisplay('nashvilleNumber', number);
-            broadcast({
-                type: 'nashville_update',
-                number: number
-            });
+            if (progressionMode) {
+                // Add to progression
+                currentProgression.push(number);
+                const progressionText = currentProgression.join(' - ');
+                updateDisplay('nashvilleNumber', progressionText);
+                broadcast({
+                    type: 'nashville_update',
+                    number: progressionText
+                });
+            } else {
+                // Send single number as normal
+                updateDisplay('nashvilleNumber', number);
+                broadcast({
+                    type: 'nashville_update',
+                    number: number
+                });
+            }
+        }
+
+        function toggleProgression() {
+            const toggleBtn = document.getElementById('progressionToggle');
+            
+            if (progressionMode) {
+                // Turn off progression mode
+                progressionMode = false;
+                currentProgression = [];
+                toggleBtn.classList.remove('active');
+                toggleBtn.textContent = 'PROG';
+            } else {
+                // Turn on progression mode
+                progressionMode = true;
+                currentProgression = [];
+                toggleBtn.classList.add('active');
+                toggleBtn.textContent = 'END';
+            }
         }
 
         function broadcast(data) {
@@ -1102,64 +1302,70 @@
             participantList.innerHTML = '';
             
             if (isHost) {
-                const hostDiv = document.createElement('div');
-                hostDiv.className = 'participant';
-                hostDiv.textContent = 'You (Host)';
-                participantList.appendChild(hostDiv);
+                const hostSpan = document.createElement('span');
+                hostSpan.className = 'participant';
+                hostSpan.textContent = 'You (Host)';
+                participantList.appendChild(hostSpan);
             }
 
             let count = isHost ? 1 : 0;
             
             connections.forEach((conn, peerId) => {
                 if (conn.open) {
-                    const div = document.createElement('div');
-                    div.className = 'participant';
-                    div.textContent = `Musician ${peerId.substr(-4)}`;
-                    participantList.appendChild(div);
+                    const span = document.createElement('span');
+                    span.className = 'participant';
+                    span.textContent = `Musician ${peerId.substr(-4)}`;
+                    participantList.appendChild(span);
                     count++;
                 }
             });
 
             if (hostConnection && hostConnection.open && !isHost) {
-                const hostDiv = document.createElement('div');
-                hostDiv.className = 'participant';
-                hostDiv.textContent = 'Host';
-                participantList.appendChild(hostDiv);
+                const hostSpan = document.createElement('span');
+                hostSpan.className = 'participant';
+                hostSpan.textContent = 'Host';
+                participantList.appendChild(hostSpan);
                 count++;
             }
 
             if (!isHost && count === 0) {
                 count = 1; // Count self
-                const selfDiv = document.createElement('div');
-                selfDiv.className = 'participant';
-                selfDiv.textContent = 'You';
-                participantList.appendChild(selfDiv);
+                const selfSpan = document.createElement('span');
+                selfSpan.className = 'participant';
+                selfSpan.textContent = 'You';
+                participantList.appendChild(selfSpan);
             }
             
             participantCount.textContent = count;
         }
 
         function endRoom() {
-            if (isHost) {
-                const confirmDialog = confirm('Are you sure you want to end this room?\n\nThis will disconnect all musicians.');
+            const confirmDialog = confirm('Are you sure you want to end this room?\n\nThis will disconnect all musicians.');
+            
+            if (confirmDialog) {
+                // Send end room signal to all connected clients
+                broadcast({
+                    type: 'room_ended'
+                });
                 
-                if (confirmDialog) {
-                    // Send end room signal to all connected clients
-                    broadcast({
-                        type: 'room_ended'
-                    });
-                    
-                    showStatus('Room ended. Disconnecting...', 'waiting');
-                    
-                    // Give time for the message to be sent, then close everything
-                    setTimeout(() => {
-                        returnToStart();
-                    }, 1500);
-                }
+                showStatus('Room ended. Disconnecting...', 'waiting');
+                
+                // Give time for the message to be sent, then close everything
+                setTimeout(() => {
+                    returnToStart();
+                }, 1500);
             }
         }
 
         function returnToStart() {
+            // Clear all active timers
+            activeTimers.forEach(timer => clearTimeout(timer));
+            activeTimers.clear();
+
+            // Reset progression state
+            progressionMode = false;
+            currentProgression = [];
+
             // Clean up all connections and peers
             if (peer) {
                 peer.destroy();
@@ -1186,20 +1392,27 @@
             heartbeatInterval = null;
 
             document.getElementById('app').style.display = 'none';
-            document.getElementById('setup').style.display = 'block';
+            document.getElementById('setup').style.display = 'flex';
+            document.getElementById('participants').style.display = 'none';
             document.getElementById('status').style.display = 'none';
             document.getElementById('roomSection').style.display = 'none';
-            document.getElementById('peerId').style.display = 'none';
-            document.getElementById('hostControls').style.display = 'none';
-            document.getElementById('endRoomBtn').style.display = 'none';
-            document.getElementById('availableRooms').style.display = 'none';
-            document.getElementById('hostRoomInput').style.display = 'block';
+            document.getElementById('hostLayout').style.display = 'none';
+            document.getElementById('clientLayout').style.display = 'none';
             
             document.getElementById('currentPart').innerHTML = '<span class="placeholder">—</span>';
             document.getElementById('nashvilleNumber').innerHTML = '<span class="placeholder">—</span>';
+            document.getElementById('currentPartHost').textContent = '—';
+            document.getElementById('nashvilleNumberHost').textContent = '—';
             document.getElementById('roomInput').value = '';
             document.getElementById('manualRoomId').value = '';
             document.getElementById('roomsList').innerHTML = '';
+            
+            // Reset progression toggle
+            const toggleBtn = document.getElementById('progressionToggle');
+            if (toggleBtn) {
+                toggleBtn.classList.remove('active');
+                toggleBtn.textContent = 'PROG';
+            }
             
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('selected'));
         }
