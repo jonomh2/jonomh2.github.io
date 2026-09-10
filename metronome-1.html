@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Metronome</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #111;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  #stage {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0b0b0d;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  #glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 110vmin;
+    height: 110vmin;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,140,90,0.6) 0%, rgba(255,140,90,0.18) 45%, rgba(255,140,90,0) 70%);
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  #core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40vmin;
+    height: 40vmin;
+    border-radius: 50%;
+    background: #3a3f4b;
+    transform: translate(-50%, -50%) scale(0.7);
+    box-shadow: 0 0 60px rgba(255,150,100,0.5);
+    pointer-events: none;
+    will-change: transform, background-color;
+  }
+  #pulse.beat #glow {
+    animation: glowPulse var(--dur, 500ms) cubic-bezier(0.15, 0.7, 0.3, 1) 1;
+  }
+  #pulse.beat #core {
+    animation: corePulse var(--dur, 500ms) cubic-bezier(0.25, 0.8, 0.3, 1) 1;
+  }
+  @keyframes glowPulse {
+    0%   { transform: translate(-50%, -50%) scale(0.3); opacity: 0.9; }
+    100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0; }
+  }
+  @keyframes corePulse {
+    0%   { transform: translate(-50%, -50%) scale(1.2); background-color: #ff8c5a; box-shadow: 0 0 80px rgba(255,150,100,0.7); }
+    30%  { transform: translate(-50%, -50%) scale(0.85); background-color: #ffb185; box-shadow: 0 0 60px rgba(255,150,100,0.5); }
+    100% { transform: translate(-50%, -50%) scale(0.7); background-color: #3a3f4b; box-shadow: 0 0 20px rgba(255,150,100,0.15); }
+  }
+  #bpm {
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15vw;
+    font-weight: 200;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 2px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    text-align: center;
+    z-index: 2;
+  }
+  #bpm.show {
+    opacity: 1;
+  }
+  #hint {
+    position: fixed;
+    bottom: 6vh;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .ctrl-btn {
+    position: fixed;
+    top: max(16px, env(safe-area-inset-top));
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ctrl-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: rgba(255,255,255,0.6);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  #stopBtn {
+    left: max(16px, env(safe-area-inset-left));
+  }
+  #fsBtn {
+    right: max(16px, env(safe-area-inset-right));
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="pulse">
+    <div id="glow"></div>
+    <div id="core"></div>
+  </div>
+  <div id="bpm">tap to start</div>
+</div>
+<button id="stopBtn" class="ctrl-btn" aria-label="Stop">
+  <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"></rect></svg>
+</button>
+<button id="fsBtn" class="ctrl-btn" aria-label="Fullscreen">
+  <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+</button>
+<div id="hint">tap anywhere to set tempo</div>
+
+<script>
+  const stage = document.getElementById('stage');
+  const pulseEl = document.getElementById('pulse');
+  const bpmEl = document.getElementById('bpm');
+  const hint = document.getElementById('hint');
+
+  let tapTimes = [];
+  let bpm = null;
+  let flashTimer = null;
+  let flashOffTimer = null;
+  let labelTimer = null;
+  let running = false;
+
+  let pressStart = 0;
+  let longPressTimer = null;
+  const LONG_PRESS_MS = 500;
+  const TAP_RESET_MS = 2000;
+
+  function clearScheduler() {
+    if (flashTimer) { clearInterval(flashTimer); flashTimer = null; }
+  }
+
+  function doPulse(intervalMs) {
+    // restart the CSS animation by forcing reflow
+    pulseEl.classList.remove('beat');
+    void pulseEl.offsetWidth;
+    pulseEl.style.setProperty('--dur', Math.max(180, intervalMs * 0.92) + 'ms');
+    pulseEl.classList.add('beat');
+  }
+
+  function startMetronome(newBpm) {
+    bpm = newBpm;
+    clearScheduler();
+    running = true;
+    const intervalMs = 60000 / bpm;
+    doPulse(intervalMs);
+    flashTimer = setInterval(() => doPulse(intervalMs), intervalMs);
+    showBpmLabel();
+  }
+
+  function stopMetronome() {
+    running = false;
+    clearScheduler();
+    pulseEl.classList.remove('beat');
+    tapTimes = [];
+    bpmEl.textContent = 'tap to start';
+    bpmEl.classList.add('show');
+    if (labelTimer) clearTimeout(labelTimer);
+  }
+
+  function showBpmLabel() {
+    bpmEl.textContent = Math.round(bpm);
+    bpmEl.classList.add('show');
+    if (labelTimer) clearTimeout(labelTimer);
+    labelTimer = setTimeout(() => bpmEl.classList.remove('show'), 1800);
+  }
+
+  function registerTap() {
+    const now = performance.now();
+    if (tapTimes.length && now - tapTimes[tapTimes.length - 1] > TAP_RESET_MS) {
+      tapTimes = [];
+    }
+    tapTimes.push(now);
+    if (tapTimes.length > 6) tapTimes.shift();
+
+    if (tapTimes.length === 1) {
+      // first tap of a new sequence: give instant feedback, don't loop yet
+      clearScheduler();
+      running = false;
+      doPulse(400);
+      bpmEl.textContent = '·';
+      bpmEl.classList.add('show');
+      if (labelTimer) clearTimeout(labelTimer);
+      return;
+    }
+
+    const intervals = [];
+    for (let i = 1; i < tapTimes.length; i++) {
+      intervals.push(tapTimes[i] - tapTimes[i - 1]);
+    }
+    const avgMs = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+    const newBpm = Math.min(300, Math.max(20, 60000 / avgMs));
+    startMetronome(newBpm);
+  }
+
+  function onPressStart(e) {
+    pressStart = performance.now();
+    longPressTimer = setTimeout(() => {
+      if (running || tapTimes.length) {
+        stopMetronome();
+        longPressTimer = null;
+        pressStart = 0; // signal that pointerup shouldn't register a tap
+      }
+    }, LONG_PRESS_MS);
+  }
+
+  function onPressEnd(e) {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+    if (pressStart === 0) return; // was consumed by long-press stop
+    registerTap();
+    pressStart = 0;
+  }
+
+  stage.addEventListener('pointerdown', onPressStart);
+  stage.addEventListener('pointerup', onPressEnd);
+  stage.addEventListener('pointercancel', () => { if (longPressTimer) clearTimeout(longPressTimer); pressStart = 0; });
+
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Stop button
+  const stopBtn = document.getElementById('stopBtn');
+  stopBtn.addEventListener('pointerdown', e => e.stopPropagation());
+  stopBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    stopMetronome();
+  });
+
+  // Fullscreen button
+  const fsBtn = document.getElementById('fsBtn');
+  fsBtn.addEventListener('pointerdown', e => e.stopPropagation());
+  fsBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  });
+</script>
+</body>
+</html>
